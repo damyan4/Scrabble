@@ -1,0 +1,3 @@
+﻿  NewProjectScrabble.cpp
+C:\Users\damian\Codes\NewProjectScrabble\NewProjectScrabble\NewProjectScrabble.cpp(169,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  NewProjectScrabble.vcxproj -> C:\Users\damian\Codes\NewProjectScrabble\x64\Debug\NewProjectScrabble.exe

@@ -1,5 +1,18 @@
-// NewProjectScrabble.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+/**
+*
+* Solution to course project # <номер на вариант>
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2022/2023
+*
+* @author Damyan Georgiev
+* @idnumber 4MI0600145
+* @compiler VC
+*
+* Main file
+*
+*/
+
 
 #include <iostream>
 #include <fstream>
@@ -7,6 +20,8 @@
 #include <vector>
 
 using namespace std;
+int const LETTERS_MAX_SIZE = 100;
+
 int getLengthOfArray(const char* arr)
 {
     int size = 0;
@@ -14,9 +29,8 @@ int getLengthOfArray(const char* arr)
     size--;
     return size;
 }
-bool findWord(char* word, vector<string> dictionary)
+bool findWord(const char* word, vector<string> dictionary)
 {
-    int i = 0;
     for (size_t i = 0; i < dictionary.size(); i++)
     {
         if (dictionary[i] == word)
@@ -43,7 +57,7 @@ void recordRandomValues(char* arr, int size)
 {
     for (size_t i = 0; i < size; i++)
     {
-        arr[i] = ('a' + rand() % 26);
+        arr[i] = 'a' + rand() % 26;
     }
 }
 void printArray(const char* arr, int size)
@@ -53,7 +67,7 @@ void printArray(const char* arr, int size)
         cout << arr[i] << ' ';
     }
 }
-void deleteLetterFromWord(char* word, int& index)
+void deleteLetterFromWord(char* word, unsigned int& index)
 {
     while (word[index] != '\0')
     {
@@ -75,11 +89,10 @@ void copyArray(const char* word,char* copy_word)
         copy_word[i] = word[i];
     }
 }
-bool checkIfWordContainsLettersFromArray(char* lettersArr,char* userWord,int size_word)
+bool checkIfWordContainsLettersFromArray(const char* lettersArr,char* userWord,int size_word)
 {
-   
     int indexOfCoincidence = 0;
-    char copy_userWord[10] = {};
+    char copy_userWord[LETTERS_MAX_SIZE] = {};
 
     copyArray(userWord,copy_userWord);
 
@@ -90,7 +103,7 @@ bool checkIfWordContainsLettersFromArray(char* lettersArr,char* userWord,int siz
             if (userWord[j] == lettersArr[i])
             {
                 indexOfCoincidence++;
-                int k = j;
+                unsigned int k = j;
                 deleteLetterFromWord(userWord, k);
                 break;
             }
@@ -105,15 +118,14 @@ bool checkIfWordContainsLettersFromArray(char* lettersArr,char* userWord,int siz
     else
     {
         return false;
-       
     }
 }
-void playGame(int number_of_words, int number_of_rounds)
+void playGame(unsigned int number_of_words, unsigned int number_of_rounds)
 {
     vector<string> dictionary;
     initializeVector(dictionary);
 
-    int const LETTERS_MAX_SIZE = 20;
+    
     char lettersArray[LETTERS_MAX_SIZE] = {};
     char userWordArray[LETTERS_MAX_SIZE] = {};
 
@@ -122,9 +134,8 @@ void playGame(int number_of_words, int number_of_rounds)
 
     for (size_t i = 0; i < number_of_rounds; i++)
     {
-        if (isInvalidWord == false)
+        if (!isInvalidWord)
         {
-
             recordRandomValues(lettersArray, number_of_words);
             cout << "Round " << i + 1 << ". Available letters: ";
         }
@@ -140,8 +151,12 @@ void playGame(int number_of_words, int number_of_rounds)
         if (ifLettersInWord && isWordInDictionary)
         {
             players_score += sizeOfWord;
-            cout << "+" << sizeOfWord << " points" << endl;
-            //cout << "Your points so far are: " << players_score << endl;
+            cout << "+" << sizeOfWord << " points\n\n";
+            isInvalidWord = false;
+        }
+        else if (strcmp(userWordArray, "!skip") == 0)
+        {
+            cout << "Skipping Round " << i + 1 << "...\n\n";
             isInvalidWord = false;
         }
         else
@@ -151,71 +166,83 @@ void playGame(int number_of_words, int number_of_rounds)
             isInvalidWord = true;
         }
     }
-    cout << "Your Total Score is " << players_score << " points" << endl;
+    cout <<"Congratulations!\n" << "Your Total Score is " << players_score << " points.\n\n";
 }
-void addNewWordInTheFile(char* word)
+void addNewWordInTheFile(const char* word)
 {
     ofstream file;
     file.open("manywords.txt", ios::app);
-
-   
-    file << word << endl;
-
-	cout << "Word added successfully!" << endl;
+    file << word << endl;	
     file.close();
 }
 int main()
 {
-    srand(time(NULL));
+    srand(time(nullptr));
     int rounds = 10;
     int words = 10;
-    char add_word[100] = "";
+    int const ADDWORD = 100;
+    char add_word[ADDWORD] = "";
     char choice;
+    cout << "Scrabble game\n" << endl;
     do
     {
 	     cout << "1. Start a new game\n" << "2. Settings\n"  << "3. Add a new word\n" << "4. Exit the app\n";
          cin >> choice;
-         switch (choice)
+         while (choice < '1' || choice>'4')
          {
-         case '1': 
-         	playGame(words, rounds);
-         	break;
-
-         
-         case '2':
-         	cout << "a. Change number of displayed letters\n" << "b. Change number of rounds\n";
-            cin >> choice;
-            if (choice=='a')
-            {
-                cout << "Words: ";
-                cin >> words;
-            }
-            else if (choice == 'b')
-            {
-                cout << "Rounds: ";
-                cin >> rounds;
-            }
-            break;
-
-         case '3':
-             cout << "Add new word: ";
-             cin >> add_word;
-             addNewWordInTheFile(add_word);
-             break;
-
-         case '4': 
-             cout << "Thank you for playing Scrabble!" << endl;
-             return 0;
+             cout << "Please enter a valid value: " << endl;
+             cin >> choice;
          }
+
+    	switch (choice)
+    	{
+	         case '1': 
+         		playGame(words, rounds);
+         		break;
+                
+	         case '2':
+         		cout <<"\nSettings:\n" << "a) Change number of displayed letters\n" << "b) Change number of rounds\n";
+	            cin >> choice;
+	            if (choice=='a')
+	            {
+	                cout << "Number of letters: ";
+                    cin >> words;
+                    while (words < 1 || words > 50)
+                    {
+                        cout << "Please enter a valid number between 1 and 50: " << endl;
+                        cin >> words;
+                    }
+                    cout << "The number of letters is updated!" << endl;
+	            }
+	            else if (choice == 'b')
+	            {
+	                cout << "Number of rounds: ";
+	                cin >> rounds;
+                    while (rounds < 1 || rounds > 20)
+                    {
+                        cout << "Please enter a valid number between 1 and 20: " << endl;
+                        cin >> rounds;
+                    }
+                    cout << "The number of rounds is updated!" << endl;
+	            }
+	            break;
+
+	         case '3':
+	             cout << "Add new word: ";
+	             cin >> add_word;
+	             addNewWordInTheFile(add_word);
+                 cout << "Word added successfully!" << endl;
+	             break;
+
+	         case '4': 
+	             cout << "Thank you for playing Scrabble!" << endl;
+	             return 0;
+    	}
          
     }
-    while (choice != 4);
+    while (true);
    
-    
-    
-
-   
-
+    return 0;
     
 }
 

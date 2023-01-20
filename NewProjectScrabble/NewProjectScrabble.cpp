@@ -7,7 +7,7 @@
 #include <vector>
 
 using namespace std;
-int getLengthOfArray(char* arr)
+int getLengthOfArray(const char* arr)
 {
     int size = 0;
     while (arr[size++] != '\0');
@@ -31,7 +31,7 @@ void initializeVector(vector<string>& v1)
     ifstream file;
     file.open("manywords.txt");
     string line;
-    //функцията проверява дали е края на текстовия файл и взима всеки ред и го слага във вектор
+    
     while (!file.eof())
     {
         getline(file, line);
@@ -46,7 +46,7 @@ void recordRandomValues(char* arr, int size)
         arr[i] = ('a' + rand() % 26);
     }
 }
-void printArray(char* arr, int size)
+void printArray(const char* arr, int size)
 {
     for (size_t i = 0; i < size; i++)
     {
@@ -61,14 +61,14 @@ void deleteLetterFromWord(char* word, int& index)
         index++;
     }
 }
-void fillDeletedWordAgain(char* word, char* copy_word)
+void fillDeletedWordAgain(char* word, const char* copy_word)
 {
     for (size_t i = 0; copy_word[i] != '\0'; i++)
     {
         word[i] = copy_word[i];
     }
 }
-void copyArray(char* word,char* copy_word)
+void copyArray(const char* word,char* copy_word)
 {
     for (size_t i = 0; word[i]!='\0'; i++)
     {
